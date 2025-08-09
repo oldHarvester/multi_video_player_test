@@ -49,6 +49,11 @@
 		<true />
 		<key>UIApplicationSupportsIndirectInputEvents</key>
 		<true />
-
+		<key>NSLocalNetworkUsageDescription</key>
+		<string>Used to search for chromecast devices</string>
+		<key>NSBonjourServices</key>
+		<array>
+			<string>_googlecast._tcp</string>
+		</array>
 	</dict>
 </plist>

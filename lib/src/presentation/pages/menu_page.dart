@@ -1,6 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:multi_video_player_test/src/presentation/pages/players/appinio_video_player.dart';
+import 'package:multi_video_player_test/src/presentation/pages/players/bitmovin_player.dart';
+import 'package:multi_video_player_test/src/presentation/pages/players/fijk_player.dart';
+import 'package:multi_video_player_test/src/presentation/pages/players/flick_player.dart';
+import 'package:multi_video_player_test/src/presentation/pages/players/flutter_hls_video_player.dart';
+import 'package:multi_video_player_test/src/presentation/pages/players/flutter_playout.dart';
+import 'package:multi_video_player_test/src/presentation/pages/players/flutter_vlc_player.dart';
+import 'package:multi_video_player_test/src/presentation/pages/players/lecle_yoyo_player.dart';
 import 'package:multi_video_player_test/src/presentation/pages/players/media_kit.dart';
+import 'package:multi_video_player_test/src/presentation/pages/players/native_video_player_page.dart';
+import 'package:multi_video_player_test/src/presentation/pages/players/omni_video_player.dart';
 import 'package:multi_video_player_test/src/presentation/pages/players/video_player.dart';
 import 'package:multi_video_player_test/src/presentation/widgets/players_info_provider.dart';
 import 'package:multi_video_player_test/src/presentation/widgets/primary_overlay/primary_overlay.dart';
@@ -9,7 +18,12 @@ import '../../config/player_constants.dart';
 import 'players/awesome_video_player.dart';
 
 class MenuPage extends StatefulWidget {
-  const MenuPage({super.key});
+  const MenuPage({
+    super.key,
+    this.initialPlayer = Players.omni_video_player,
+  });
+
+  final Players initialPlayer;
 
   @override
   State<MenuPage> createState() => _MenuPageState();
@@ -24,11 +38,21 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
   late final AnimationController _sizeController;
   late final Animation<double> _sizeAnimation;
 
+  int getIndexByType(Players player) {
+    final players = Players.values;
+    final index = players.indexWhere(
+      (element) {
+        return element == player;
+      },
+    );
+    return index >= 0 ? index : 0;
+  }
+
   @override
   void initState() {
     super.initState();
     _pageController = PageController(
-      initialPage: 0,
+      initialPage: getIndexByType(widget.initialPlayer),
     );
     _sizeController = AnimationController(
       vsync: this,
@@ -198,6 +222,24 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
                                               AppinioVideoPlayerPage(),
                                             Players.awesome_video_player =>
                                               AwesomeVideoPlayerPage(),
+                                            Players.bitmovin_player =>
+                                              BitmovinPlayerPage(),
+                                            Players.fijkplayer =>
+                                              FijkPlayerPage(),
+                                            Players.flick_video_player =>
+                                              FlickPlayerPage(),
+                                            Players.flutter_hls_video_player =>
+                                              FlutterHlsVideoPlayerPage(),
+                                            Players.flutter_playout =>
+                                              FlutterPlayoutPage(),
+                                            Players.flutter_vlc_player =>
+                                              FlutterVlcPlayer(),
+                                            Players.lecle_yoyo_player =>
+                                              LecleYoyoPlayerPage(),
+                                            Players.native_video_player =>
+                                              NativeVideoPlayerPage(),
+                                            Players.omni_video_player =>
+                                              OmniVideoPlayerPage(),
                                             _ => SizedBox(),
                                           },
                                         );
@@ -207,37 +249,41 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
                                       top: 50,
                                       left: 0,
                                       right: 0,
-                                      child: ValueListenableBuilder(
-                                        valueListenable: _playerUrl,
-                                        builder: (context, url, _) {
-                                          return ValueListenableBuilder(
-                                            valueListenable: _page,
-                                            builder: (context, value, child) {
-                                              final player = players[value];
-                                              return Column(
-                                                children: [
-                                                  Text(
-                                                    player.packageName,
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 20,
-                                                      fontWeight:
-                                                          FontWeight.w600,
+                                      child: IgnorePointer(
+                                        ignoring: true,
+                                        child: ValueListenableBuilder(
+                                          valueListenable: _playerUrl,
+                                          builder: (context, url, _) {
+                                            return ValueListenableBuilder(
+                                              valueListenable: _page,
+                                              builder: (context, value, child) {
+                                                final player = players[value];
+                                                return Column(
+                                                  children: [
+                                                    Text(
+                                                      player.packageName,
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 20,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
                                                     ),
-                                                  ),
-                                                  Text(
-                                                    url,
-                                                    style: TextStyle(
-                                                      fontSize: 14,
-                                                      color: Colors.white,
+                                                    Text(
+                                                      url,
+                                                      style: TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.white,
+                                                      ),
                                                     ),
-                                                  ),
-                                                ],
-                                              );
-                                            },
-                                          );
-                                        },
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          },
+                                        ),
                                       ),
                                     ),
                                   ],

@@ -1,4 +1,6 @@
 PODS:
+  - audio_session (0.0.1):
+    - Flutter
   - auto_orientation (0.0.1):
     - Flutter
   - awesome_video_player (1.0.0):
@@ -37,7 +39,7 @@ PODS:
     - Flutter
   - flutter_vlc_player (3.0.3):
     - Flutter
-    - MobileVLCKit (~> 3.6.0b12)
+    - MobileVLCKit (~> 3.6.1b1)
   - GCDWebServer (3.5.4):
     - GCDWebServer/Core (= 3.5.4)
   - GCDWebServer/Core (3.5.4)
@@ -80,6 +82,7 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
+  - audio_session (from `.symlinks/plugins/audio_session/ios`)
   - auto_orientation (from `.symlinks/plugins/auto_orientation/ios`)
   - awesome_video_player (from `.symlinks/plugins/awesome_video_player/ios`)
   - bitmovin_player (from `.symlinks/plugins/bitmovin_player/ios`)
@@ -116,6 +119,8 @@ SPEC REPOS:
     - PINOperation
 
 EXTERNAL SOURCES:
+  audio_session:
+    :path: ".symlinks/plugins/audio_session/ios"
   auto_orientation:
     :path: ".symlinks/plugins/auto_orientation/ios"
   awesome_video_player:
@@ -158,6 +163,7 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/wakelock_plus/ios"
 
 SPEC CHECKSUMS:
+  audio_session: 19e9480dbdd4e5f6c4543826b2e8b0e4ab6145fe
   auto_orientation: 102ed811a5938d52c86520ddd7ecd3a126b5d39d
   awesome_video_player: 947279f1cc1c5f814ad713591948243f6a63bc1e
   BIJKPlayer: 4c5d66e5cb99ae5bade6f22a4fcc031722a81c64
@@ -171,7 +177,7 @@ SPEC CHECKSUMS:
   flutter_inappwebview_ios: 6f63631e2c62a7c350263b13fa5427aedefe81d4
   flutter_playout: a5aed32b3003b02eb4432815ecfe0c0e42a801ff
   flutter_screen_wake: 4d3c2b43943ea81bd5e591fd4e639ea537f4ca5e
-  flutter_vlc_player: 68553dec38187c14a7800e6d27a30bf9b25b53bc
+  flutter_vlc_player: 1508e7989e41d11328e4fa4c9a1f188c7cf4cf7a
   GCDWebServer: 2c156a56c8226e2d5c0c3f208a3621ccffbe3ce4
   HLSCachingReverseProxyServer: 59935e1e0244ad7f3375d75b5ef46e8eb26ab181
   media_kit_libs_ios_video: a5fe24bc7875ccd6378a0978c13185e1344651c1
