@@ -10,6 +10,8 @@ import 'package:multi_video_player_test/src/presentation/pages/players/lecle_yoy
 import 'package:multi_video_player_test/src/presentation/pages/players/media_kit.dart';
 import 'package:multi_video_player_test/src/presentation/pages/players/native_video_player_page.dart';
 import 'package:multi_video_player_test/src/presentation/pages/players/omni_video_player.dart';
+import 'package:multi_video_player_test/src/presentation/pages/players/pod_player.dart';
+import 'package:multi_video_player_test/src/presentation/pages/players/video_js_player.dart';
 import 'package:multi_video_player_test/src/presentation/pages/players/video_player.dart';
 import 'package:multi_video_player_test/src/presentation/widgets/players_info_provider.dart';
 import 'package:multi_video_player_test/src/presentation/widgets/primary_overlay/primary_overlay.dart';
@@ -20,7 +22,7 @@ import 'players/awesome_video_player.dart';
 class MenuPage extends StatefulWidget {
   const MenuPage({
     super.key,
-    this.initialPlayer = Players.omni_video_player,
+    this.initialPlayer = Players.video_js_player,
   });
 
   final Players initialPlayer;
@@ -240,6 +242,10 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
                                               NativeVideoPlayerPage(),
                                             Players.omni_video_player =>
                                               OmniVideoPlayerPage(),
+                                            Players.pod_player =>
+                                              PodPlayerPage(),
+                                            Players.video_js_player =>
+                                              VideoJsPlayerPage(),
                                             _ => SizedBox(),
                                           },
                                         );
