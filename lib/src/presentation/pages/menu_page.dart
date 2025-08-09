@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 import 'package:multi_video_player_test/src/presentation/pages/players/media_kit.dart';
 import 'package:multi_video_player_test/src/presentation/pages/players/video_player.dart';
 import 'package:multi_video_player_test/src/presentation/widgets/players_info_provider.dart';
@@ -14,12 +13,14 @@ class MenuPage extends StatefulWidget {
   State<MenuPage> createState() => _MenuPageState();
 }
 
-class _MenuPageState extends State<MenuPage> {
+class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
   late final PageController _pageController;
   late final ValueNotifier<int> _page;
   final ValueNotifier<bool> _opened = ValueNotifier(true);
   final ValueNotifier<String> _playerUrl =
       ValueNotifier(PlayerConstants.amazingSpiderMan2012Hls);
+  late final AnimationController _sizeController;
+  late final Animation<double> _sizeAnimation;
 
   @override
   void initState() {
@@ -27,8 +28,19 @@ class _MenuPageState extends State<MenuPage> {
     _pageController = PageController(
       initialPage: 0,
     );
-
+    _sizeController = AnimationController(
+      vsync: this,
+      value: _opened.value ? 1 : 0,
+      duration: Duration(milliseconds: 600),
+    );
+    _sizeAnimation =
+        CurvedAnimation(parent: _sizeController, curve: Curves.ease);
     _page = ValueNotifier(_pageController.initialPage);
+  }
+
+  void toggleBar() {
+    _opened.value = !_opened.value;
+    _sizeController.animateTo(_opened.value ? 1 : 0);
   }
 
   @override
@@ -37,6 +49,7 @@ class _MenuPageState extends State<MenuPage> {
     _pageController.dispose();
     _opened.dispose();
     _playerUrl.dispose();
+    _sizeController.dispose();
     super.dispose();
   }
 
@@ -61,120 +74,169 @@ class _MenuPageState extends State<MenuPage> {
                       ValueListenableBuilder(
                         valueListenable: _opened,
                         builder: (context, opened, child) {
-                          return PrimaryOverlay(
-                            enable: true,
-                            targetAnchor: Alignment.topRight,
-                            followerAnchor: Alignment.topLeft,
-                            targetBuilder: (context, data) {
-                              return SafeArea(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    _opened.value = !_opened.value;
-                                  },
-                                  behavior: HitTestBehavior.translucent,
-                                  child: Container(
-                                    width: 50,
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                      border: border,
+                          return ValueListenableBuilder(
+                            valueListenable: _sizeController,
+                            builder: (context, value, menuListView) {
+                              return PrimaryOverlay(
+                                key: ValueKey(value),
+                                enable: true,
+                                targetAnchor: Alignment.topRight,
+                                followerAnchor: Alignment.topLeft,
+                                targetBuilder: (context, data) {
+                                  return SafeArea(
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        toggleBar();
+                                      },
+                                      behavior: HitTestBehavior.translucent,
+                                      child: Container(
+                                        width: 50,
+                                        height: 50,
+                                        decoration: BoxDecoration(
+                                          border: border,
+                                          color: Colors.white,
+                                        ),
+                                        child: Icon(
+                                          opened
+                                              ? Icons.arrow_left
+                                              : Icons.arrow_right,
+                                        ),
+                                      ),
                                     ),
-                                    child: Icon(
-                                      opened
-                                          ? Icons.arrow_left
-                                          : Icons.arrow_right,
-                                    ),
-                                  ),
-                                ),
+                                  );
+                                },
+                                builder: (context, data) {
+                                  return menuListView!;
+                                },
                               );
                             },
-                            builder: (context, data) {
-                              return AnimatedSize(
-                                duration: Duration(milliseconds: 600),
-                                curve: Curves.ease,
-                                child: SizedBox(
-                                  width: opened ? barWidth : 0,
-                                  child: CustomScrollView(
-                                    slivers: [
-                                      SliverPadding(
-                                        padding: EdgeInsets.symmetric(
-                                          vertical: 20,
-                                        ),
-                                        sliver: SliverSafeArea(
-                                          sliver: SliverList.separated(
-                                            itemCount: players.length,
-                                            itemBuilder: (context, index) {
-                                              final player = players[index];
-                                              return Material(
-                                                type: MaterialType.transparency,
-                                                child: InkWell(
-                                                  onTap: () {
-                                                    _pageController
-                                                        .animateToPage(
-                                                      index,
-                                                      duration: Duration(
-                                                        milliseconds: 400,
-                                                      ),
-                                                      curve: Curves.ease,
-                                                    );
-                                                  },
-                                                  child: Ink(
-                                                    padding: EdgeInsets.all(8),
-                                                    child: Text(
-                                                      player.packageName,
+                            child: SizeTransition(
+                              axis: Axis.horizontal,
+                              sizeFactor: _sizeAnimation,
+                              child: SizedBox(
+                                width: barWidth,
+                                child: CustomScrollView(
+                                  slivers: [
+                                    SliverPadding(
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 20,
+                                      ),
+                                      sliver: SliverSafeArea(
+                                        sliver: SliverList.separated(
+                                          itemCount: players.length,
+                                          itemBuilder: (context, index) {
+                                            final player = players[index];
+                                            return Material(
+                                              type: MaterialType.transparency,
+                                              child: InkWell(
+                                                onTap: () {
+                                                  _pageController.animateToPage(
+                                                    index,
+                                                    duration: Duration(
+                                                      milliseconds: 400,
                                                     ),
+                                                    curve: Curves.ease,
+                                                  );
+                                                },
+                                                child: Ink(
+                                                  padding: EdgeInsets.all(8),
+                                                  child: Text(
+                                                    player.packageName,
                                                   ),
                                                 ),
-                                              );
-                                            },
-                                            separatorBuilder: (context, index) {
-                                              return Container(
-                                                decoration: BoxDecoration(
-                                                  border: border,
-                                                ),
-                                              );
-                                            },
-                                          ),
+                                              ),
+                                            );
+                                          },
+                                          separatorBuilder: (context, index) {
+                                            return Container(
+                                              decoration: BoxDecoration(
+                                                border: border,
+                                              ),
+                                            );
+                                          },
                                         ),
-                                      )
-                                    ],
-                                  ),
+                                      ),
+                                    )
+                                  ],
                                 ),
-                              );
-                            },
+                              ),
+                            ),
                           );
                         },
                       ),
                       Expanded(
                         child: DecoratedBox(
-                          decoration: BoxDecoration(border: border),
+                          decoration: BoxDecoration(
+                            border: border,
+                            color: Colors.black87,
+                          ),
                           child: SafeArea(
                             child: Column(
                               children: [
-                                ValueListenableBuilder(
-                                  valueListenable: _page,
-                                  builder: (context, value, child) {
-                                    final player = players[value];
-                                    return Text(player.packageName);
-                                  },
-                                ),
-                                const Gap(40),
                                 Expanded(
-                                  child: PageView.builder(
-                                    controller: _pageController,
-                                    scrollDirection: Axis.vertical,
-                                    itemCount: players.length,
-                                    itemBuilder: (context, index) {
-                                      final player = players[index];
-                                      return KeyedSubtree(
-                                        key: ValueKey(url),
-                                        child: switch (player) {
-                                          Players.video_player =>
-                                            VideoPlayerPage(),
-                                          Players.media_kit => MediakitPage(),
-                                          _ => SizedBox(),
+                                  child: Stack(
+                                    fit: StackFit.expand,
+                                    children: [
+                                      PageView.builder(
+                                        onPageChanged: (value) {
+                                          _page.value = value;
                                         },
-                                      );
-                                    },
+                                        controller: _pageController,
+                                        scrollDirection: Axis.vertical,
+                                        itemCount: players.length,
+                                        itemBuilder: (context, index) {
+                                          final player = players[index];
+                                          return KeyedSubtree(
+                                            key: ValueKey(url),
+                                            child: switch (player) {
+                                              Players.video_player =>
+                                                VideoPlayerPage(),
+                                              Players.media_kit =>
+                                                MediakitPage(),
+                                              _ => SizedBox(),
+                                            },
+                                          );
+                                        },
+                                      ),
+                                      Positioned(
+                                        top: 50,
+                                        left: 0,
+                                        right: 0,
+                                        child: ValueListenableBuilder(
+                                          valueListenable: _playerUrl,
+                                          builder: (context, url, _) {
+                                            return ValueListenableBuilder(
+                                              valueListenable: _page,
+                                              builder: (context, value, child) {
+                                                final player = players[value];
+                                                return Column(
+                                                  children: [
+                                                    Text(
+                                                      player.packageName,
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 20,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      url,
+                                                      style: TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 )
                               ],

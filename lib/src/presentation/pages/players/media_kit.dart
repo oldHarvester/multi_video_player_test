@@ -28,6 +28,12 @@ class _MediakitPageState extends State<MediakitPage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    _player.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Video(
       controller: _videoController,
