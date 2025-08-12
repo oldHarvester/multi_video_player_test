@@ -1,4 +1,5 @@
-import 'package:awesome_video_player/awesome_video_player.dart';
+// import 'package:awesome_video_player/awesome_video_player.dart';
+import 'package:better_player_plus/better_player_plus.dart';
 import 'package:flutter/material.dart';
 
 import '../../widgets/players_info_provider.dart';

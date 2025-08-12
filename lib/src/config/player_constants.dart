@@ -3,6 +3,10 @@
 abstract final class PlayerConstants {
   static const amazingSpiderMan2012Hls =
       'https://vod02.splay.uz/hls13/The%20Amazing%20Spider-Man%202012/_tmp_/master.m3u8';
+
+  static const amazingSpiderMan2014Hls =
+      'https://vod02.splay.uz/hls13/The%20Amazing%20Spider-Man%202%202014/_tmp_/master.m3u8';
+
   static const bigBuckBunnyMp4 =
       'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
 

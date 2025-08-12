@@ -22,7 +22,7 @@ import 'players/awesome_video_player.dart';
 class MenuPage extends StatefulWidget {
   const MenuPage({
     super.key,
-    this.initialPlayer = Players.video_js_player,
+    this.initialPlayer = Players.awesome_video_player,
   });
 
   final Players initialPlayer;
@@ -36,7 +36,7 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
   late final ValueNotifier<int> _page;
   final ValueNotifier<bool> _opened = ValueNotifier(true);
   final ValueNotifier<String> _playerUrl =
-      ValueNotifier(PlayerConstants.amazingSpiderMan2012Hls);
+      ValueNotifier(PlayerConstants.amazingSpiderMan2014Hls);
   late final AnimationController _sizeController;
   late final Animation<double> _sizeAnimation;
 
